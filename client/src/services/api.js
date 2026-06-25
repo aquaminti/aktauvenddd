@@ -1,7 +1,8 @@
 import { storage } from './storage';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
-const API_ORIGIN = API_BASE.startsWith('http') ? API_BASE.replace(/\/api\/?$/, '') : '';
+const rawApiBase = import.meta.env.VITE_API_URL;
+const API_BASE = rawApiBase ? rawApiBase.replace(/\/+$/, '') : '/api';
+const API_ORIGIN = API_BASE.startsWith('http') ? API_BASE.replace(/\/api$/, '') : '';
 
 export function buildBackendUrl(path) {
   if (!path) return path;
