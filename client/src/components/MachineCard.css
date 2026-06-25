@@ -1,0 +1,59 @@
+.machine-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  min-width: 0;
+  transition: border-color var(--duration-base) var(--ease-standard), box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.machine-card:hover,
+.machine-card.is-active {
+  border-color: var(--color-blue);
+  box-shadow: var(--shadow-md);
+}
+
+.machine-card-main {
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: var(--space-3) var(--space-4);
+  min-width: 0;
+}
+
+.machine-card-address {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  overflow-wrap: break-word;
+  color: var(--color-navy);
+}
+
+.machine-card-gallery-btn {
+  margin: 0 var(--space-3);
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .machine-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .machine-card-main {
+    padding: var(--space-3);
+  }
+
+  .machine-card-gallery-btn {
+    width: auto;
+    margin: 0 var(--space-3) var(--space-3);
+  }
+}

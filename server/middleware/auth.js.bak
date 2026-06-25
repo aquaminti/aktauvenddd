@@ -1,0 +1,43 @@
+const jwt = require('jsonwebtoken');
+
+function extractToken(req) {
+  const tokenFromCookie = req.cookies && req.cookies.token;
+  const authHeader = req.headers.authorization;
+  const tokenFromHeader =
+    authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+  return tokenFromCookie || tokenFromHeader;
+}
+
+function requireAuth(req, res, next) {
+  try {
+    const token = extractToken(req);
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Требуется авторизация' });
+    }
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    return next();
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Сессия недействительна или истекла' });
+  }
+}
+
+function attachUserIfPresent(req, res, next) {
+  try {
+    const token = extractToken(req);
+    if (token) {
+      req.user = jwt.verify(token, process.env.JWT_SECRET);
+    }
+  } catch (err) {
+    /* ignore invalid token */
+  }
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ success: false, message: 'Недостаточно прав' });
+  }
+  next();
+}
+
+module.exports = { requireAuth, attachUserIfPresent, requireAdmin };

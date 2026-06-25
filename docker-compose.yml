@@ -1,0 +1,12 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: aktauvend-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - aktauvend_mongo_data:/data/db
+
+volumes:
+  aktauvend_mongo_data:
