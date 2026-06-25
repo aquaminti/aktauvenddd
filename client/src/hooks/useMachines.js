@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { fetchMachines } from '../services/api';
+import { fetchMachines, buildBackendUrl } from '../services/api';
 import fallbackMachines from '../data/machines.json';
 
 function buildPhotos(machine) {
@@ -29,14 +29,18 @@ export function useMachines(options = {}) {
       try {
         const data = await fetchMachines();
         if (isMounted) {
-          setMachines(data.machines);
+          const normalized = data.machines.map((machine) => ({
+            ...machine,
+            photos: (machine.photos || []).map(buildBackendUrl),
+          }));
+          setMachines(normalized);
           setError('');
         }
       } catch (err) {
         if (isMounted) {
           const withPhotos = fallbackMachines.map((m) => ({
             ...m,
-            photos: buildPhotos(m),
+            photos: buildPhotos(m).map(buildBackendUrl),
           }));
           setMachines(withPhotos);
           setError('Используются сохранённые данные — сервер временно недоступен');

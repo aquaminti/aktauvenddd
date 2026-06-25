@@ -1,10 +1,24 @@
+import { storage } from './storage';
+
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_ORIGIN = API_BASE.startsWith('http') ? API_BASE.replace(/\/api\/?$/, '') : '';
+
+export function buildBackendUrl(path) {
+  if (!path) return path;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (path.startsWith('/images/') && API_ORIGIN) {
+    return `${API_ORIGIN}${path}`;
+  }
+  return path;
+}
 
 async function request(path, options = {}) {
+  const token = storage.getToken();
   const response = await fetch(`${API_BASE}${path}`, {
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {}),
     },
     ...options,
