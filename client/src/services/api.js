@@ -2,19 +2,10 @@ import { storage } from './storage';
 
 const rawApiBase = import.meta.env.VITE_API_URL;
 const API_BASE = rawApiBase ? rawApiBase.replace(/\/+$/, '') : '/api';
-const API_ORIGIN = API_BASE.startsWith('http') ? API_BASE.replace(/\/api$/, '') : '';
-const DEFAULT_RENDER_ORIGIN = 'https://aktauvenddd.onrender.com';
 
 export function buildBackendUrl(path) {
   if (!path) return path;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  if (path.startsWith('/images/')) {
-    if (API_ORIGIN) {
-      return `${API_ORIGIN}${path}`;
-    }
-    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    return isLocal ? path : `${DEFAULT_RENDER_ORIGIN}${path}`;
-  }
   return path;
 }
 
