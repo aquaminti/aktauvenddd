@@ -2,11 +2,12 @@ import { storage } from './storage';
 
 const rawApiBase = import.meta.env.VITE_API_URL;
 const API_BASE = rawApiBase ? rawApiBase.replace(/\/+$/, '') : '/api';
+const BACKEND_BASE = rawApiBase ? rawApiBase.replace(/\/api\/?$/, '') : '';
 
 export function buildBackendUrl(path) {
   if (!path) return path;
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  return path;
+  return `${BACKEND_BASE}${path}`;
 }
 
 async function request(path, options = {}) {
